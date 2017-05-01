@@ -7,23 +7,24 @@ public class Game_loop extends GameJPanel{
 	
 //---------- instance objects --------------------------------------------------------------------------------------------------------------------------------------
 	int Level = 1;//change to work on other levels
-	ImageLayer layer1 = new ImageLayer("bkg1.png", -1, -1);
-	ImageLayer layer2 = new ImageLayer("bkg2.png", -1, -1);
-	ImageLayer layer3 = new ImageLayer("bkg3.png", -1, -1);
-	ImageLayer layer4 = new ImageLayer("bkg4.png", -1, -1);
-	ImageLayer layer5 = new ImageLayer("space.jpg", -2, -2);
+	ImageLayer layer1 = new ImageLayer("bkg1.png", -1, -1);//background for first level
+	ImageLayer layer2 = new ImageLayer("bkg2.png", -1, -1);//background for second level
+	ImageLayer layer3 = new ImageLayer("bkg3.png", -1, -1);//background for third level
+	ImageLayer layer4 = new ImageLayer("bkg4.png", -1, -1);//background for the forth level
+	ImageLayer layer5 = new ImageLayer("space.jpg", -2, -2);//background for the fifth level
 	
-	int x_CameraMax = 720;//1440/2; //+ //GameJPanel.frameWidth;// Since your moving the image layer in the negative
-	int y_CameraMax = 450;//900/2; //+ //GameJPanel.frameHeight;//So adding the size of the camera, or the players view should
-	int XoriginCam = 0-720;
+	int x_CameraMax = 720;
+	int y_CameraMax = 450;
+	int XoriginCam = 0-720;// Since you're moving the image layer in the negative
 	int YoriginCam = 0-450;
-	//int CamScreen;
+	
 	int m = 480;
 	int n = 180;
+
 //------------CAMERA LIMIT--------------------------------------------------------------------------------------------------------------------------------------------
 // Theses lines combine to create a box to detect if the layey1 left the box, then to return it to the box 
-	Line leftDiagnol = new Line(0,0,1440,900);
-	Line rightDiagnol = new Line(1440,0,0,900);
+	/*Line leftDiagnol = new Line(0,0,1440,900);
+	Line rightDiagnol = new Line(1440,0,0,900);*/
 	Line LeftBorder = new Line(-479,-179,-479,0);
 	Line RightBorder = new Line(1,-179,1,1);
 	Line TopBorder = new Line(-479,-179,-1,-179);
@@ -98,13 +99,15 @@ public class Game_loop extends GameJPanel{
 	Rect box11 = new Rect(470,400,390,180,0);
 	
 //---------- constructor -------------------------------------------------------------------------------------------------------------------------------------------
-	public void startTheGame(){	
+	public void startTheGame(){
+		
 		startGame();//call the method that starts the game in GameJPanel
 	}
 	
 //---------- respond to input --------------------------------------------------------------------------------------------------------------------------------------
 	public void respondToInput(){
        hero.respondToInput(input);
+       //System.out.println(BottomBorder.distanceTo((int)layer1.totalx,(int)layer1.totaly)+"");
 //--------CAMERA_START----------------------------------------------------------------------------------------------------------------------------------------------------
       
        if(Level==1){
@@ -112,18 +115,19 @@ public class Game_loop extends GameJPanel{
     	   if(input[GameJPanel.UP]) //{Camera2d.moveUpBy(3);}if(input[GameJPanel.DN]) {Camera2d.moveDownBy(3);}if(input[GameJPanel.RT]) {Camera2d.moveRightBy(3);}if(input[GameJPanel.LT]) {Camera2d.moveLeftBy(3);}
        //*
        {
-    		   if(LeftBorder.distanceTo((int)layer1.totalx,(int)layer1.totaly)>-1)	{Camera2d.moveLeftBy(0);}
-    		   if(RightBorder.distanceTo((int)layer1.totalx,(int)layer1.totaly)<1)	{Camera2d.moveRightBy(0);}
-    		   if(TopBorder.distanceTo((int)layer1.totalx,(int)layer1.totaly)>169)  {Camera2d.moveDownBy(0);}
-    		   if(BottomBorder.distanceTo((int)layer1.totalx,(int)layer1.totaly)<-179){Camera2d.moveUpBy(0);}
+    		   //System.out.print(RightBorder.distanceTo((int)layer1.totalx,(int)layer1.totaly));
+    		   if(LeftBorder.distanceTo((int)layer1.totalx,(int)layer1.totaly)>1)	   {Camera2d.moveLeftBy(1);}
+    		   if(RightBorder.distanceTo((int)layer1.totalx,(int)layer1.totaly)<2)	   {Camera2d.moveRightBy(1);}
+    		   if(TopBorder.distanceTo((int)layer1.totalx,(int)layer1.totaly)>169)     {Camera2d.moveDownBy(1);}
+    		   if(BottomBorder.distanceTo((int)layer1.totalx,(int)layer1.totaly)<-179) {Camera2d.moveUpBy(1);}
        }
        //* CameraLimit is a rect create to take advantage of the contains() method inside rect to keep the imagelayer x and y inside that rect 
        if(CameraLimit.contains((int)layer1.totalx,(int)layer1.totaly))
        	{  //uses the angle of direction character is facing
-    	   		if(input[GameJPanel.UP] && (hero.A < 90  || hero.A > 270))  {Camera2d.moveRightBy(2);}//super.update();} 
-    	   		if(input[GameJPanel.UP] && (hero.A < 270 && hero.A > 90))   {Camera2d.moveLeftBy(2);}//super.update();}
-    	   		if(input[GameJPanel.UP] && (hero.A > 180 && hero.A < 360)) {Camera2d.moveUpBy(2);}//super.update();}
-    	   		if(input[GameJPanel.UP] && (hero.A < 180 && hero.A > 0)) {Camera2d.moveDownBy(2);}//super.update();}
+    	   		if(input[GameJPanel.UP] && (hero.A < 45  || hero.A > 315))   {Camera2d.moveRightBy(1);}//super.update();} 
+    	   		if(input[GameJPanel.UP] && (hero.A < 225 && hero.A > 135))   {Camera2d.moveLeftBy(1);}//super.update();}
+    	   		if(input[GameJPanel.UP] && (hero.A > 225 && hero.A < 315))   {Camera2d.moveUpBy(1);}//super.update();}
+    	   		if(input[GameJPanel.UP] && (hero.A < 135 && hero.A > 45))    {Camera2d.moveDownBy(1);}//super.update();}
        	}
      //*/
        }
@@ -133,19 +137,19 @@ public class Game_loop extends GameJPanel{
            System.out.println(bottomwall.distanceTo((int)hero.x,(int)hero.y)+" oh");
            //*
            {
-        	   if(LeftBorder.distanceTo((int)layer2.totalx,(int)layer2.totaly)>-1)	{Camera2d.moveLeftBy(2); }
-        	   if(RightBorder.distanceTo((int)layer2.totalx,(int)layer2.totaly)<1)	{Camera2d.moveRightBy(2);}
-        	   if(TopBorder.distanceTo((int)layer2.totalx,(int)layer2.totaly)>169)  {Camera2d.moveDownBy(2);}
-        	   if(BottomBorder.distanceTo((int)layer2.totalx,(int)layer2.totaly)<-179){Camera2d.moveUpBy(2);}
+        	   if(LeftBorder.distanceTo((int)layer2.totalx,(int)layer2.totaly)>1)	{Camera2d.moveLeftBy(1); }
+        	   if(RightBorder.distanceTo((int)layer2.totalx,(int)layer2.totaly)<2)	{Camera2d.moveRightBy(1);}
+        	   if(TopBorder.distanceTo((int)layer2.totalx,(int)layer2.totaly)>169)  {Camera2d.moveDownBy(1);}
+        	   if(BottomBorder.distanceTo((int)layer2.totalx,(int)layer2.totaly)<-179){Camera2d.moveUpBy(1);}
            }
            //* CameraLimit is a rect create to take advantage of the contains() method inside rect to keep the imagelayer x and y inside that rect 
-           if(CameraLimit.contains((int)layer2.totalx,(int)layer2.totaly))
-           	{  //uses the angle of direction character is facing
-        	   if(input[GameJPanel.UP] && (hero.A < 90  || hero.A > 270))  {Camera2d.moveRightBy(2);}//super.update();} 
-        	   if(input[GameJPanel.UP] && (hero.A < 270 && hero.A > 90))   {Camera2d.moveLeftBy(2);}//super.update();}
-        	   if(input[GameJPanel.UP] && (hero.A > 180 && hero.A < 360)) {Camera2d.moveUpBy(2);}//super.update();}
-        	   if(input[GameJPanel.UP] && (hero.A < 180 && hero.A > 0)) {Camera2d.moveDownBy(2);}//super.update();}
-           	}
+           if(CameraLimit.contains((int)layer1.totalx,(int)layer1.totaly))
+          	{  //uses the angle of direction character is facing
+       	   		if(input[GameJPanel.UP] && (hero.A < 45  || hero.A > 315))   {Camera2d.moveRightBy(1);}//super.update();} 
+       	   		if(input[GameJPanel.UP] && (hero.A < 225 && hero.A > 135))   {Camera2d.moveLeftBy(1);}//super.update();}
+       	   		if(input[GameJPanel.UP] && (hero.A > 225 && hero.A < 315))   {Camera2d.moveUpBy(1);}//super.update();}
+       	   		if(input[GameJPanel.UP] && (hero.A < 135 && hero.A > 45))    {Camera2d.moveDownBy(1);}//super.update();}
+          	}
          //*/
            }
        if(Level==3){
@@ -153,19 +157,19 @@ public class Game_loop extends GameJPanel{
            if(input[GameJPanel.UP]) //{Camera2d.moveUpBy(3);}if(input[GameJPanel.DN]) {Camera2d.moveDownBy(3);}if(input[GameJPanel.RT]) {Camera2d.moveRightBy(3);}if(input[GameJPanel.LT]) {Camera2d.moveLeftBy(3);}
            //*
            {
-        	   if(LeftBorder.distanceTo((int)layer3.totalx,(int)layer3.totaly)>-1)	{Camera2d.moveLeftBy(2);}
-        	   if(RightBorder.distanceTo((int)layer3.totalx,(int)layer3.totaly)<1)	{Camera2d.moveRightBy(2);}
-        	   if(TopBorder.distanceTo((int)layer3.totalx,(int)layer3.totaly)>169)  {Camera2d.moveDownBy(2);}
-        	   if(BottomBorder.distanceTo((int)layer3.totalx,(int)layer3.totaly)<-179){Camera2d.moveUpBy(2);}
+        	   if(LeftBorder.distanceTo((int)layer3.totalx,(int)layer3.totaly)>1)	{Camera2d.moveLeftBy(1);}
+        	   if(RightBorder.distanceTo((int)layer3.totalx,(int)layer3.totaly)<2)	{Camera2d.moveRightBy(1);}
+        	   if(TopBorder.distanceTo((int)layer3.totalx,(int)layer3.totaly)>169)  {Camera2d.moveDownBy(1);}
+        	   if(BottomBorder.distanceTo((int)layer3.totalx,(int)layer3.totaly)<-179){Camera2d.moveUpBy(1);}
            }
            //* CameraLimit is a rect create to take advantage of the contains() method inside rect to keep the imagelayer x and y inside that rect 
-           if(CameraLimit.contains((int)layer3.totalx,(int)layer3.totaly))
-           	{  //uses the angle of direction character is facing
-        	   if(input[GameJPanel.UP] && (hero.A < 90  || hero.A > 270))  {Camera2d.moveRightBy(2);}//super.update();} 
-        	   if(input[GameJPanel.UP] && (hero.A < 270 && hero.A > 90))   {Camera2d.moveLeftBy(2);}//super.update();}
-        	   if(input[GameJPanel.UP] && (hero.A > 180 && hero.A < 360)) {Camera2d.moveUpBy(2);}//super.update();}
-        	   if(input[GameJPanel.UP] && (hero.A < 180 && hero.A > 0)) {Camera2d.moveDownBy(2);}//super.update();}
-           	}
+           if(CameraLimit.contains((int)layer1.totalx,(int)layer1.totaly))
+          	{  //uses the angle of direction character is facing
+       	   		if(input[GameJPanel.UP] && (hero.A < 45  || hero.A > 315))   {Camera2d.moveRightBy(1);}//super.update();} 
+       	   		if(input[GameJPanel.UP] && (hero.A < 225 && hero.A > 135))   {Camera2d.moveLeftBy(1);}//super.update();}
+       	   		if(input[GameJPanel.UP] && (hero.A > 225 && hero.A < 315))   {Camera2d.moveUpBy(1);}//super.update();}
+       	   		if(input[GameJPanel.UP] && (hero.A < 135 && hero.A > 45))    {Camera2d.moveDownBy(1);}//super.update();}
+          	}
          //*/
            }
        if(Level==4){
@@ -173,19 +177,19 @@ public class Game_loop extends GameJPanel{
            if(input[GameJPanel.UP]) //{Camera2d.moveUpBy(10);}if(input[GameJPanel.DN]) {Camera2d.moveDownBy(10);}if(input[GameJPanel.RT]) {Camera2d.moveRightBy(10);}if(input[GameJPanel.LT]) {Camera2d.moveLeftBy(10);}
            //*
            {
-        	   if(LeftBorder.distanceTo((int)layer4.totalx,(int)layer4.totaly)>-1)	{Camera2d.moveLeftBy(2);}
-        	   if(RightBorder.distanceTo((int)layer4.totalx,(int)layer4.totaly)<1)	{Camera2d.moveRightBy(2);}
-        	   if(TopBorder.distanceTo((int)layer4.totalx,(int)layer4.totaly)>169)  {Camera2d.moveDownBy(2);}
-        	   if(BottomBorder.distanceTo((int)layer4.totalx,(int)layer4.totaly)<-179){Camera2d.moveUpBy(2);}
+        	   if(LeftBorder.distanceTo((int)layer4.totalx,(int)layer4.totaly)>1)	{Camera2d.moveLeftBy(1);}
+        	   if(RightBorder.distanceTo((int)layer4.totalx,(int)layer4.totaly)<2)	{Camera2d.moveRightBy(1);}
+        	   if(TopBorder.distanceTo((int)layer4.totalx,(int)layer4.totaly)>169)  {Camera2d.moveDownBy(1);}
+        	   if(BottomBorder.distanceTo((int)layer4.totalx,(int)layer4.totaly)<-179){Camera2d.moveUpBy(1);}
            }
            //* CameraLimit is a rect create to take advantage of the contains() method inside rect to keep the imagelayer x and y inside that rect 
            if(CameraLimit.contains((int)layer1.totalx,(int)layer1.totaly))
-           	{  //uses the angle of direction character is facing
-        	   if(input[GameJPanel.UP] && (hero.A < 90  || hero.A > 270))  {Camera2d.moveRightBy(2);}//super.update();} 
-        	   if(input[GameJPanel.UP] && (hero.A < 270 && hero.A > 90))   {Camera2d.moveLeftBy(2);}//super.update();}
-        	   if(input[GameJPanel.UP] && (hero.A > 180 && hero.A < 360)) {Camera2d.moveUpBy(2);}//super.update();}
-        	   if(input[GameJPanel.UP] && (hero.A < 180 && hero.A > 0)) {Camera2d.moveDownBy(2);}//super.update();}
-           	}
+          	{  //uses the angle of direction character is facing
+       	   		if(input[GameJPanel.UP] && (hero.A < 45  || hero.A > 315))   {Camera2d.moveRightBy(1);}//super.update();} 
+       	   		if(input[GameJPanel.UP] && (hero.A < 225 && hero.A > 135))   {Camera2d.moveLeftBy(1);}//super.update();}
+       	   		if(input[GameJPanel.UP] && (hero.A > 225 && hero.A < 315))   {Camera2d.moveUpBy(1);}//super.update();}
+       	   		if(input[GameJPanel.UP] && (hero.A < 135 && hero.A > 45))    {Camera2d.moveDownBy(1);}//super.update();}
+          	}
          //*/
            }
   //------------CAMERA_END-------------------------------------------------------------------------------------------------------------------------------------------
@@ -217,7 +221,7 @@ public class Game_loop extends GameJPanel{
 			   Level=2; 
 			   hero.moveBy(-1700, 10); 
 			   hero.moveByrect(-1700, 10);
-			   Camera2d.moveBy(-450, -20);
+			   Camera2d.moveBy(-450, 0);
 		   												 }
 //---------LINE-COLLISION--------------------------------------------------------
 		   if(leftWALL.distanceTo((int)hero.x,(int)hero.y)>-32)
@@ -241,13 +245,21 @@ public class Game_loop extends GameJPanel{
 			   hero.moveUpByrect(3);
 		   }
 //---------RECTANGLE-COLLISION------------------------------------------------------------------------------
-		   if(b1WALL.hasCollidedWith(hero)|b2WALL.hasCollidedWith(hero)
-		     |middlePillar1.hasCollidedWith(hero)|middlePillar2.hasCollidedWith(hero)
-		     |middlePillar3.hasCollidedWith(hero)|middlePillar4.hasCollidedWith(hero)
-		     |middlePillar5.hasCollidedWith(hero))
-		   {
-			   {hero.moveBackwardby(3);
-			   hero.moveBackwardrect(3);}
+		   if(b1WALL.hasCollidedWith(hero)||b2WALL.hasCollidedWith(hero)
+		     ||middlePillar1.hasCollidedWith(hero)||middlePillar2.hasCollidedWith(hero)
+		     ||middlePillar3.hasCollidedWith(hero)||middlePillar4.hasCollidedWith(hero)
+		     ||middlePillar5.hasCollidedWith(hero))
+		   {	///*
+			   if(hero.front && input[GameJPanel.UP])
+			   {
+				   hero.moveBackwardby(3);
+				   hero.moveBackwardrect(3);
+			   }//*/
+			   if(hero.back && input[GameJPanel.DN])
+			   {
+				   hero.moveForwardby(3);
+				   hero.moveForwardrect(3);
+			   }   
 		   }
 		
 	   }
@@ -258,6 +270,7 @@ public class Game_loop extends GameJPanel{
 		   if(Teleport2.contains((int)hero.x,(int)hero.y))
 		   {
 			   Level=1;
+			   hero.A=180;hero.rectA=180;
 			   hero.moveBy(1700, 0);
 			   hero.moveByrect(1700, 0);
 			   Camera2d.moveBy(450, 0);
@@ -279,18 +292,27 @@ public class Game_loop extends GameJPanel{
 			 |Topwall_3.hasCollidedWith(hero)|PillarA.hasCollidedWith(hero)
 			 |PillarB.hasCollidedWith(hero)|middleWALL1.hasCollidedWith(hero)
 			 |middleWALL2.hasCollidedWith(hero)|leftwallA.hasCollidedWith(hero)
-			 |leftwallB.hasCollidedWith(hero)|Topwall_4.hasCollidedWith(hero))
+			 |leftwallB.hasCollidedWith(hero)) //Topwall_4.hasCollidedWith(hero))
 		   {
-			   hero.moveBackwardby(3);
-			   hero.moveBackwardrect(3);
+			   if(hero.front && input[GameJPanel.UP])
+			   {
+				   hero.moveBackwardby(3);
+				   hero.moveBackwardrect(3);
+			   }//*/
+			   if(hero.back && input[GameJPanel.DN])
+			   {
+				   hero.moveForwardby(3);
+				   hero.moveForwardrect(3);
+			   }
 		   }
 //----------TELEPORT-TO-THE-NEXT-LEVEL-3
 		    if(Teleport3.contains((int)hero.x,(int)hero.y))
 		    {
-		    	Level=3;hero.moveBy(-845, 260);
+		    	Level=3;
+		    	hero.moveBy(-845, 260);
 		    	hero.moveByrect(-845, 260);
 		    	hero.A=0;hero.rectA=0;
-		    	Camera2d.moveBy(-450, 0);
+		    	Camera2d.moveBy(-200, 0);
 		    }
 	   }
 //-----LEVEL-3------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -302,6 +324,7 @@ public class Game_loop extends GameJPanel{
 			   Level=2;
 			   hero.moveBy(850, -200);
 			   hero.moveByrect(850, -200);
+			   hero.A=90;hero.rectA=90;
 			   Camera2d.moveBy(150, 0);
 			}
 //---------LINE-COLLISION-------------------------------------------
@@ -331,7 +354,16 @@ public class Game_loop extends GameJPanel{
 			|BHdesk.hasCollidedWith(hero)|BHdeska.hasCollidedWith(hero)
 			|BHdeskb.hasCollidedWith(hero))
 		   {
-			   hero.moveBackwardby(3); hero.moveBackwardrect(3);
+			   if(hero.front && input[GameJPanel.UP])
+			   {
+				   hero.moveBackwardby(3);
+				   hero.moveBackwardrect(3);
+			   }//*/
+			   if(hero.back && input[GameJPanel.DN])
+			   {
+				   hero.moveForwardby(3);
+				   hero.moveForwardrect(3);
+			   }
 		   }
 //---------TELEPORT-TO-NEXT-LEVEL 4------------------------------------
 		   if(TelePort4.contains((int)hero.x,(int)hero.y))
@@ -339,7 +371,7 @@ public class Game_loop extends GameJPanel{
 			   Level=4;hero.moveBy(900, 0);
 			   hero.moveByrect(900, 0);
 			   hero.A=180;hero.rectA=180;
-			   Camera2d.moveBy(0, -10);
+			   Camera2d.moveBy(100, -10);
 		   }
 	   }
 //-----LEVEL-4------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -362,7 +394,16 @@ public class Game_loop extends GameJPanel{
 			 |box9.hasCollidedWith(hero)|box10.hasCollidedWith(hero)
 			 |box11.hasCollidedWith(hero))
 			 {
-			   hero.moveBackwardby(3);hero.moveBackwardrect(3);
+			   if(hero.front && input[GameJPanel.UP])
+			   {
+				   hero.moveBackwardby(3);
+				   hero.moveBackwardrect(3);
+			   }//*/
+			   if(hero.back && input[GameJPanel.DN])
+			   {
+				   hero.moveForwardby(3);
+				   hero.moveForwardrect(3);
+			   }
 			 }
 //---------TELEPORT-END-GAMEOVER------------------------------------		   
 		   if(Teleport5.contains((int)hero.x,(int)hero.y))
@@ -382,6 +423,7 @@ public class Game_loop extends GameJPanel{
  if(Level==1)
  	{
 	 	layer1.draw(g);//draw image background
+	 	
 	 	hero.draw(g);//draw hero
 	 	//badguy.draw(g);//draw bad guy
 	 	LeftBorder.draw(g);
@@ -412,7 +454,7 @@ public class Game_loop extends GameJPanel{
 	 Topwall_1.draw(g);
 	 Topwall_2.draw(g);
 	 Topwall_3.draw(g);
-	 Topwall_4.draw(g);
+	 //Topwall_4.draw(g);
 	 PillarA.draw(g);
 	 PillarB.draw(g);
 	 middleWALL1.draw(g);

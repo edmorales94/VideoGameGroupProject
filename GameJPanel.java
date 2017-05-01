@@ -21,7 +21,6 @@ import javax.swing.JPanel;
 public abstract class GameJPanel extends JPanel implements KeyListener, Runnable{
  
 	private static final long serialVersionUID = 1L;
-	Video video = Video.access();
 
 	boolean[] input = new boolean[1024];
 	JFrame frame;//needed for a fullScreen
@@ -114,8 +113,7 @@ public abstract class GameJPanel extends JPanel implements KeyListener, Runnable
         frameHeight  = getHeight();
         //frameWidth  = frame.getContentPane().getWidth();
         //frameHeight  = frame.getContentPane().getHeight();
-        System.out.println(frameWidth);
-        
+        System.out.println(frameWidth); 
  	}
 
 //---------- start game ---------------------------------------------------------------------------------------------------------
