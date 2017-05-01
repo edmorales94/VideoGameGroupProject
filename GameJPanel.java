@@ -1,4 +1,6 @@
 package groupProject;
+
+
 //----------------------------------------------------------------------------//
 // Copyright - Brian Murphy - 2004                                            //
 //----------------------------------------------------------------------------//
@@ -35,6 +37,11 @@ public abstract class GameJPanel extends JPanel implements KeyListener, Runnable
 
    // The thread in which the Game Loop will execute
    Thread timer;
+   //
+   static int frameWidth;//= frame.getContentPane().getWidth();;
+   
+   static int frameHeight;
+     
 
 //---------- Key events ---------------------------------------------------------------//
 
@@ -93,13 +100,22 @@ public abstract class GameJPanel extends JPanel implements KeyListener, Runnable
  		GraphicsDevice screen = environtment.getDefaultScreenDevice();//get the default screen of current device
  		frame = new JFrame();// creating a frame
  		frame.add(this);//since we extend JPanel, we add this class inside the frame
- 		frame.setIgnoreRepaint(false);
- 		frame.setUndecorated(true);//doesn't dispay borders and title bar
+ 		frame.setResizable(true);//cant' maximize/restore down the frame
+ 		frame.setIgnoreRepaint(true);
+ 		frame.setUndecorated(true);//doesn't display borders and title bar
  		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);//if frame is closed, so is the application
  		screen.setFullScreenWindow(frame);//set the frame to fullScreen
+ 		
  			
  		frame.createBufferStrategy(3);//creating 3 buffers for page flipping technique 	
  		flipPages = frame.getBufferStrategy();//get a reference of the bufferStrategy created
+ 	
+ 		frameWidth  = getWidth();
+        frameHeight  = getHeight();
+        //frameWidth  = frame.getContentPane().getWidth();
+        //frameHeight  = frame.getContentPane().getHeight();
+        System.out.println(frameWidth);
+        
  	}
 
 //---------- start game ---------------------------------------------------------------------------------------------------------
@@ -162,27 +178,28 @@ public abstract class GameJPanel extends JPanel implements KeyListener, Runnable
    public void postGameLoop() {}
    
 //---------- draw method --------------------------------------------------------------------------------------------------------
-   public abstract void paint(Graphics g);
+   public abstract void draw(Graphics g);
 
 //---------- update screen ------------------------------------------------------------------------------------------------------
    public void update(){
 	   Graphics g = flipPages.getDrawGraphics();//get Graphics context for the draw buffer
-	   paint(g);//call the abstract draw method defined by other classes and draw their content
+	   draw(g);//call the abstract draw method defined by other classes and draw their content
 	   g.dispose();//releases any system resources that it using the graphics contex
 	   flipPages.show();//show the draw buffer
    }
 
 //---------- Thread run method called by timer.start() --------------------------------------------------------------------------
    public final void run(){
-	  preGameLoop();
-      while(!finished){
-    	  if(!paused)
-    		  inGameLoop();
-    		  update();
-    		  sleep(duration); 
+      preGameLoop();//method used to show anything before the actual game starts
+      while ( !finished ){//while game is not finished
+         if ( !paused ){// and if it's not paused either 
+        	 inGameLoop();//implements everything needed in the game 
+        	 update();//update the screen
+        	 sleep(duration);//sleep the thread every 15 milliseconds
+         }
       }
-      postGameLoop();
-      System.exit(0);  
+      postGameLoop();//method to show anything you want after the game is over
+      System.exit(0);//close the frame
    }
 
 //---------- keyPressed ---------------------------------------------------------------------------------------------------------
@@ -197,7 +214,8 @@ public abstract class GameJPanel extends JPanel implements KeyListener, Runnable
    }
 
 //---------- keyReleased --------------------------------------------------------------------------------------------------------
-   public final void keyReleased(KeyEvent e){
+   public final void keyReleased(KeyEvent e)
+   {
       int code = e.getKeyCode();
       input[code] = false;
    }
