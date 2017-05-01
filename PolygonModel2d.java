@@ -1,67 +1,128 @@
 package groupProject;
+
+import java.awt.*;
 import java.awt.Graphics;
 
-public abstract class PolygonModel2d{
+public abstract class PolygonModel2d extends Rect
+{
 		
 		double x;
 		double y;
+		int w;
+		int h;
 		int A;
 		//int z;
-		int [][] struct_x = x_data();// contains all Xs of each polygon
-		int [][] struct_y = y_data();// contains all Ys of each polygon
+		int [][] struct_x = x_data();
+		int [][] struct_y = y_data();
 		boolean moving = false;
+		double totalx;
+		double totaly;
 		
-//---------- constructor -----------------------------------------------------------------------------------------------------------------------------------------------
-		public PolygonModel2d(double x, double y, int angle){
+	
+		
+		
+		
+		public PolygonModel2d(double x, double y,int w, int h, int angle)
+		{
+			super((int)x-30,(int)y-40,w, h,angle);
 			this.x = x;
-			this.y = y;	
+			this.y = y;
+			this.w = w;
+			this.h = h;
 			A = angle;//changed so it can be remember from the beginning
 		}
-		
-//---------- abstract methods ------------------------------------------------------------------------------------------------------------------------------------------
-		public abstract int[][] x_data();//method to get all Xs of a polygon
-		public abstract int[][] y_data();//method to get all Xs of a polygon
+		public abstract int[][] x_data();
+		public abstract int[][] y_data();
 		//public abstract Color[] getColors();
 		
-//---------- draw method -----------------------------------------------------------------------------------------------------------------------------------------------
 		public void draw(Graphics g){
-			int[] xpoints = new int[4];//the shapes are just rectangles/squares so we need 4 Xs
-			int[] ypoints = new int[4];//and 4 Ys to create the rectangles/squares
+			//g.translate((int)this.x-Camera2d.x,(int)this.y-Camera2d.y);
+			totalx = x - Camera2d.x;
+			totaly = y - Camera2d.y;
+			   
+			int[] xpoints = new int[4];
+			int[] ypoints = new int[4];
+			double cosA =  Lookup.cos[A];
+			double sinA =  Lookup.sin[A];
+			g.setColor(Color.red);
+			//g.translate((int)x-Camera2d.x, (int)y - Camera2d.y);
+			super.draw(g);
+			//g.translate((int)x-Camera2d.x, (int)y - Camera2d.y);
 			
-			double cosA =  Lookup.cos[A];// the value to get X to rotate
-			double sinA =  Lookup.sin[A];// the value to get Y to rotate
-						
-			for(int poly = 0; poly < struct_x.length; poly++){// go through each of the 4 rectangles
-				for(int vertex = 0; vertex< struct_x[poly].length; vertex++){//go through each vertex of each rectangle 
-					//set the x and y of those vertices to the correct coordinates based on the angle
-					xpoints[vertex] = (int) (struct_x[poly][vertex]* cosA - struct_y[poly][vertex]* sinA + x);
-					ypoints[vertex] = (int) (struct_x[poly][vertex]* sinA + struct_y[poly][vertex]* cosA + y);
+			for(int poly = 0; poly < struct_x.length; poly++)
+			{
+			
+				for(int vertex = 0; vertex< struct_x[poly].length; vertex++)
+				{
+					xpoints[vertex] = (int) (struct_x[poly][vertex]* cosA - struct_y[poly][vertex]* sinA + x-Camera2d.x);
+					ypoints[vertex] = (int) (struct_x[poly][vertex]* sinA + struct_y[poly][vertex]* cosA + y-Camera2d.y);
 				}
-				g.drawPolygon(xpoints, ypoints, struct_x[poly].length);//draw each rectangle of the body
+				g.drawPolygon(xpoints, ypoints, struct_x[poly].length);
+				//g.translate((int)this.x-Camera2d.x,(int)this.y-Camera2d.y);
+				g.setColor(Color.GRAY);
+				g.fillPolygon(xpoints, ypoints, struct_x[poly].length);
+				//g.translate((int)this.x-Camera2d.x,(int)this.y-Camera2d.y);
 			}
+			//g.translate((int)this.x-Camera2d.x,(int)this.y-Camera2d.y);
+			//refreshPoly(this);
+			
+			
+	
 		}
-		
-//---------- rotate to the left ----------------------------------------------------------------------------------------------------------------------------------------
-		public void rotateLeftby(int degrees){
+		//*
+		public void moveBy(int dx, int dy)
+		{
+			x += dx; 
+			y += dy;
+			
+		}
+		//*/
+		public void rotateLeftby(int degrees)
+		{
 			A -= degrees;
 			if(A < 0) A += 360;
+			//moving = true;
 		}
-//---------- rotate to the right ---------------------------------------------------------------------------------------------------------------------------------------
-		public void rotateRightby(int degrees){
+		public void rotateRightby(int degrees)
+		{
 			A += degrees;
 			if(A > 359) A -= 360;
+			//moving = true;
 		}
-//---------- move forward ----------------------------------------------------------------------------------------------------------------------------------------------
-		public void moveForwardby(int d){
-			x +=  d * Lookup.cos[A]; 
-			y +=  d * Lookup.sin[A];
+		public void moveForwardby(int d)
+		{
+			x +=  (d * Lookup.cos[A]);
+			y +=  (d * Lookup.sin[A]);
 			moving = true;
 		}
-//--------- move backward ----------------------------------------------------------------------------------------------------------------------------------------------
-		public void moveBackwardby(int d){
+		public void moveBackwardby(int d)
+		{
 			x -=  d * Lookup.cos[A]; 
 			y -=  d * Lookup.sin[A];
 			moving = true;
 		}
+		public void moveUpBy(int dy)
+		{
+		     y -= dy;
+		}
+
+		public void moveDownBy(int dy)
+		{
+		     y += dy;
+		      
+		}
+
+		public void moveLeftBy(int dx)
+		{
+			x -= dx;
+		     
+		}
+
+		public void moveRightBy(int dx)
+		{
+	        x += dx;
+		     
+		}
+	
 }
 
